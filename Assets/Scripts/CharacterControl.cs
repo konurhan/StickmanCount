@@ -6,7 +6,7 @@ public class CharacterControl : MonoBehaviour
 {
     [SerializeField] bool isFalling;
     private Coroutine deathRoutine;
-
+    public Color color;
 
     private void Awake()
     {
@@ -25,11 +25,13 @@ public class CharacterControl : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("DeadlySurface")) 
-        { 
+        {
+            CallPSOnCollision(collision);
             PlayerManager.instance.KillCharacter(gameObject);
         }
         else if (collision.gameObject.CompareTag("Enemy"))
         {
+            CallPSOnCollision(collision);
             PlayerManager.instance.KillCharacter(collision.gameObject);
             PlayerManager.instance.KillCharacter(gameObject);
         }
@@ -47,5 +49,14 @@ public class CharacterControl : MonoBehaviour
             gameObject.transform.parent = null;//so that character stops moving with other
             deathRoutine = PlayerManager.instance.StartCoroutine(PlayerManager.instance.DestroyCharacterDelayed(gameObject));
         }
+    }
+
+    private void CallPSOnCollision(Collision collision)
+    {
+        //Vector3 position = collision.GetContact(0).point;
+        Vector3 position = transform.position + Vector3.up;
+        Vector3 normal = collision.GetContact(0).normal;
+        ParticleSystemManager.instance.EmitDropletBurst(position, normal, color);
+        //Debug.Break();
     }
 }

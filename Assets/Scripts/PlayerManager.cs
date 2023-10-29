@@ -21,11 +21,7 @@ public class PlayerManager : MonoBehaviour
     public Transform countText;
     private void Awake()
     {
-        if (instance == null) instance = this;
-        else
-        {
-            Destroy(this);
-        }
+        instance = this;
 
         CacheCharacters();
         UpdateCountText();
