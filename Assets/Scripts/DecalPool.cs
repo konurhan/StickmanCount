@@ -13,9 +13,6 @@ public class DecalPool : MonoBehaviour
     private DecalData[] decalDataPool;
     private ParticleSystem.Particle[] decalParticles;
 
-    [SerializeField] private Material BlueDecalMat;
-    [SerializeField] private Material RedDecalMat;
-
     private void Awake()
     {
         DecalPS = GetComponent<ParticleSystem>();
@@ -32,8 +29,11 @@ public class DecalPool : MonoBehaviour
     public void OnDropletParticleHitToGround(ParticleCollisionEvent particleCollisionEvent, Color color)
     {
         //color = Color.red;
+        if (color == ParticleSystemManager.instance.Red)
+        {
+            Debug.Log("red decals will be displayed");
+        }
         UpdateDataPool(particleCollisionEvent, color);
-        GetComponent<ParticleSystemRenderer>().material = RedDecalMat;
         DisplayDecals();
     }
 
@@ -45,11 +45,12 @@ public class DecalPool : MonoBehaviour
         }
 
         decalDataPool[decalDataPoolCursor].Position = particleCollisionEvent.intersection;
+        decalDataPool[decalDataPoolCursor].Position.y = 6f;
         //Vector3 decalEulers = Quaternion.LookRotation(particleCollisionEvent.normal).eulerAngles;color
         Vector3 decalEulers = Quaternion.LookRotation(-particleCollisionEvent.normal,Vector3.up).eulerAngles;
-        //decalEulers.z = Random.Range(0, 360);
+        decalEulers.z = Random.Range(0, 360);
         decalDataPool[decalDataPoolCursor].Rotation3D = decalEulers;
-        decalDataPool[decalDataPoolCursor].Size = Random.Range(decalSizeMin, decalSizeMax);
+        decalDataPool[decalDataPoolCursor].Size3D = new Vector3(Random.Range(decalSizeMin, decalSizeMax), Random.Range(decalSizeMin, decalSizeMax), Random.Range(decalSizeMin, decalSizeMax));
         decalDataPool[decalDataPoolCursor].color = color;
 
         decalDataPoolCursor++;
@@ -62,7 +63,8 @@ public class DecalPool : MonoBehaviour
         {
             decalParticles[i].position = decalDataPool[i].Position + new Vector3(0,-0.5f,0);
             decalParticles[i].rotation3D = decalDataPool[i].Rotation3D;//new Vector3(90,0,0);//
-            decalParticles[i].startSize = decalDataPool[i].Size;
+            //decalParticles[i].startSize = decalDataPool[i].Size;
+            decalParticles[i].startSize3D = decalDataPool[i].Size3D;
             decalParticles[i].startColor = decalDataPool[i].color;
         }
         DecalPS.SetParticles(decalParticles, decalParticles.Length);

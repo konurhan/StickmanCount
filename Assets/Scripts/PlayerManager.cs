@@ -23,18 +23,23 @@ public class PlayerManager : MonoBehaviour
     {
         instance = this;
 
-        CacheCharacters();
-        UpdateCountText();
+
     }
-    
-    public void CacheCharacters()
+
+    private void Start()
+    {
+        InitialCharacters();
+    }
+
+    public void InitialCharacters()
     {
         characters.Clear();
-        int childCount = CharactersParent.childCount;
+        /*int childCount = CharactersParent.childCount;
         for (int i = 0; i < childCount; i++) 
         { 
             characters.Add(CharactersParent.GetChild(i).gameObject);
-        }
+        }*/
+        AddNewCharacters(GameManager.Instance.gameProgress.startingUnitsCount);
     }
 
     //repositions characters so that they stay in a circle
@@ -83,7 +88,6 @@ public class PlayerManager : MonoBehaviour
         characters.Remove(character);
         ObjectPooling.instance.SetPlayerCharacter(character);
         UpdateCountText();
-        //play particle system popping effect
     }
 
     public IEnumerator DestroyCharacterDelayed(GameObject character)

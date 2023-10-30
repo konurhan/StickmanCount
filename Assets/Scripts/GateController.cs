@@ -12,6 +12,7 @@ public class GateController : MonoBehaviour
     public int gateIndex;
 
     public Transform Text;
+    public GameObject Bubbles;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class GateController : MonoBehaviour
         if (isConsumed) return;
         if (!other.gameObject.CompareTag("Player")) return;
         Text.gameObject.SetActive(false);
+        Bubbles.SetActive(false);
         gameObject.GetComponent<MeshRenderer>().enabled = false;
         SetGatesConsumed();
         switch (type)

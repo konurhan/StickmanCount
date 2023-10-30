@@ -49,6 +49,16 @@ public class GameManager : MonoBehaviour
 
         //open canvas and wait for user to push next level button
         EndofTheLevelPanel.gameObject.SetActive(true);
+        PlayerManager.instance.CharactersParent.gameObject.SetActive(false);
+        PlayerManager.instance.gameObject.SetActive(false);
+
+    }
+
+    public void OnLevelFailed()
+    {
+        EndofTheLevelPanel.gameObject.SetActive(true);
+        PlayerManager.instance.CharactersParent.gameObject.SetActive(false);
+        PlayerManager.instance.gameObject.SetActive(false);
     }
 
     public IEnumerator LoadNextLevel()

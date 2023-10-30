@@ -19,20 +19,23 @@ public class CharacterControl : MonoBehaviour
 
     void Update()
     {
-        CheckIfShouldFall();
+        //CheckIfShouldFall();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("DeadlySurface")) 
         {
-            CallPSOnCollision(collision);
+            CallPSOnCollision(collision, color);
             PlayerManager.instance.KillCharacter(gameObject);
         }
         else if (collision.gameObject.CompareTag("Enemy"))
         {
-            CallPSOnCollision(collision);
-            PlayerManager.instance.KillCharacter(collision.gameObject);
+            if (collision.gameObject.GetComponent<EnemyCollision>().isDying) return;
+            collision.gameObject.GetComponent<EnemyCollision>().isDying = true;
+            CallPSOnCollision(collision, color);
+            CallPSOnCollision(collision, ParticleSystemManager.instance.Red);
+            collision.gameObject.GetComponent<EnemyCollision>().controller.KillCharacter(collision.gameObject);
             PlayerManager.instance.KillCharacter(gameObject);
         }
     }
@@ -42,21 +45,26 @@ public class CharacterControl : MonoBehaviour
         if(!Physics.Raycast(new Vector3(transform.position.x, 5.1f, transform.position.z), Vector3.down, 15))
         {
             isFalling = true;
-            GetComponent<Rigidbody>().isKinematic = false;
+            //GetComponent<Rigidbody>().isKinematic = false;
+            GetComponent<Rigidbody>().drag = 0;
+            GetComponent<Rigidbody>().angularDrag = 0.05f;
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | 
+                RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY;
             //following part can be realized inside a method name KillFallenCharacter in PlayerManager script as a coroutine
             PlayerManager.instance.characters.Remove(gameObject);
             PlayerManager.instance.UpdateCountText();
-            gameObject.transform.parent = null;//so that character stops moving with other
+            gameObject.transform.SetParent(null,true);//so that character stops moving with others
             deathRoutine = PlayerManager.instance.StartCoroutine(PlayerManager.instance.DestroyCharacterDelayed(gameObject));
         }
     }
 
-    private void CallPSOnCollision(Collision collision)
+    private void CallPSOnCollision(Collision collision, Color charColor)
     {
         //Vector3 position = collision.GetContact(0).point;
         Vector3 position = transform.position + Vector3.up;
         Vector3 normal = collision.GetContact(0).normal;
-        ParticleSystemManager.instance.EmitDropletBurst(position, normal, color);
+        ParticleSystemManager.instance.EmitDropletBurst(position, normal, charColor);
         //Debug.Break();
     }
 }

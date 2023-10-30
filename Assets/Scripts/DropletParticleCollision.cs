@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class DropletParticleCollision : MonoBehaviour
@@ -7,18 +8,21 @@ public class DropletParticleCollision : MonoBehaviour
     public ParticleSystem DropletPS;
     public List<ParticleCollisionEvent> collisionEvents;
     [SerializeField] private string Name;
-    [SerializeField] private Color color;
+    [SerializeField] private Color32 color;
+    [SerializeField] private DecalPool decalPool;
+    
     private void Start()
     {
         DropletPS = GetComponent<ParticleSystem>();
         collisionEvents = new List<ParticleCollisionEvent>();
-        if (name == "red")
+        if (color.CompareRGB(ParticleSystemManager.instance.Red))
         {
-            color = ParticleSystemManager.instance.Red;
+            decalPool = ParticleSystemManager.instance.decalPoolRed;
         }
-        else
+        else if (color.CompareRGB(ParticleSystemManager.instance.Blue))
         {
             color = ParticleSystemManager.instance.Blue;
+            decalPool = ParticleSystemManager.instance.decalPoolBlue;
         }
     }
 
@@ -29,7 +33,7 @@ public class DropletParticleCollision : MonoBehaviour
         ParticlePhysicsExtensions.GetCollisionEvents(DropletPS, other, collisionEvents);
         for (int i = 0; i < collisionEvents.Count; i++)
         {
-            ParticleSystemManager.instance.decalPool.OnDropletParticleHitToGround(collisionEvents[i],color);
+            decalPool.OnDropletParticleHitToGround(collisionEvents[i],color);
         }
     }
 }

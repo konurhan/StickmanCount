@@ -8,23 +8,28 @@ public class ParticleSystemManager : MonoBehaviour
 
     public ParticleSystem DropletPSRed;
     public ParticleSystem DropletPSBlue;
-    public ParticleSystem DecalPS;
+    public ParticleSystem DecalPSred;
+    public ParticleSystem DecalPSblue;
 
-    public DecalPool decalPool;
+    public DecalPool decalPoolRed;
+    public DecalPool decalPoolBlue;
 
-    public Color Red;
-    public Color Blue;
+    public Color32 Red;
+    public Color32 Blue;
 
     public int emittionAmount;
 
     private void Awake()
     {
         instance = this;
+        decalPoolBlue = transform.GetChild(2).GetComponent<DecalPool>();
+        decalPoolRed = transform.GetChild(3).GetComponent<DecalPool>();
+
     }
 
     private void Start()
     {
-        decalPool = transform.GetChild(2).GetComponent<DecalPool>();
+        
     }
 
     //call from collision of characterControl of enemy and player characters
@@ -36,12 +41,18 @@ public class ParticleSystemManager : MonoBehaviour
     public void EmitAtLocation(Vector3 position, Vector3 contactNormal, Color color)
     {
         ParticleSystem ps;
-        if (color == Red) ps = DropletPSRed;
+        if (color == Red)
+        {
+            ps = DropletPSRed;
+            Debug.Log("Color is red");
+        }
         else ps = DropletPSBlue;
 
         ps.transform.position = position;
         //ps.transform.rotation = Quaternion.LookRotation(contactNormal);
         ps.transform.rotation = Quaternion.LookRotation(Vector3.up, Vector3.up);
+        ParticleSystem.MainModule main = ps.main;
+        //main.startSize = 3f;
         ps.Emit(emittionAmount);
     }
 }

@@ -3,14 +3,15 @@ guid: d7cffddcbc0cc8f4ebe6e28eb9804082
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
-  fontSize: 16
+  fontSize: 44
   forceTextureCase: -2
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
   fontNames:
   - Square
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 10d69894c93e3bd4aa0cdb660d322310, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

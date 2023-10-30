@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
+    public static PlayerMovementController instance;
+
     public bool isHoldingDown;
     public Vector3 lastTouchPos;
 
@@ -15,9 +17,14 @@ public class PlayerMovementController : MonoBehaviour
 
     public float horSpeed;
     public float SpeedZ;
+
+    bool overrideMovementControl;
+
     private void Awake()
     {
+        instance = this;
         isHoldingDown = false;
+        overrideMovementControl = false;
     }
 
     void Start()
@@ -27,7 +34,10 @@ public class PlayerMovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HoldingCheck();
+        if (!overrideMovementControl)
+        {
+            HoldingCheck();
+        }        
     }
 
     public void HoldingCheck()
@@ -58,5 +68,35 @@ public class PlayerMovementController : MonoBehaviour
         Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out hit);
         if (hit.point == Vector3.zero) return; 
         lastTouchPos = hit.point;
+    }
+
+    public void OverrideMovement(Vector3 target)
+    {
+        overrideMovementControl = true;
+        foreach (GameObject character in PlayerManager.instance.characters)
+        {
+            character.GetComponent<IndividualMovement>().SetupForMovement(target, 2f);
+            character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
+        }
+    }
+
+    public void ReturnToNormal()
+    {
+        overrideMovementControl = false;
+        foreach (GameObject character in PlayerManager.instance.characters)
+        {
+            character.GetComponent<IndividualMovement>().StopIndividualMovement();
+            character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePosition;
+        }
+        PlayerManager.instance.RepositionCharacters();
+    }
+
+    public void MoveTowardsCommonMiddlePoint(Vector3 target)
+    {
+        Parent.transform.position = new Vector3(Mathf.Lerp(Parent.transform.position.x, target.x, Time.deltaTime * SpeedZ), 
+            Parent.transform.position.y,
+            Mathf.Lerp(Parent.transform.position.z, target.z, Time.deltaTime * SpeedZ));
     }
 }

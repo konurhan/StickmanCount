@@ -22,6 +22,7 @@ public class ObjectPooling : MonoBehaviour
     private void Start()
     {
         PoolPlayersCharacters(playerCharPoolSize);
+        PoolEnemyCharacters(enemyCharPoolSize);
     }
 
     public void PoolPlayersCharacters(int num)
@@ -58,11 +59,66 @@ public class ObjectPooling : MonoBehaviour
             character = pooledPlayerChars[pooledPlayerChars.Count - 1];
         }
 
+        /*character.GetComponent<Rigidbody>().drag = 1000;
+        character.GetComponent<Rigidbody>().angularDrag = 10;
+        character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;*/
         return character;
     }
 
     public void SetPlayerCharacter(GameObject character)
     {
+        /*character.GetComponent<Rigidbody>().drag = 1000;
+        character.GetComponent<Rigidbody>().angularDrag = 10;
+        character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;*/
+        character.GetComponent<IndividualMovement>().canMoveIndividually = false;
+        character.SetActive(false);
+        character.transform.parent = null;
+    }
+
+    public void PoolEnemyCharacters(int num)
+    {
+        for (int i = 0; i < num; i++)
+        {
+            InstantiateAndAddEnemyChars();
+        }
+    }
+
+    public void InstantiateAndAddEnemyChars()
+    {
+        GameObject enemy = Instantiate(Resources.Load("Prefabs/Boy")) as GameObject;
+        pooledEnemyChars.Add(enemy);
+        enemy.SetActive(false);
+    }
+
+    public GameObject GetEnemyCharacter(EnemyController controller)
+    {
+        GameObject character = null;
+        int count = pooledEnemyChars.Count;
+        for (int i = 0; i < count; i++)
+        {
+            if (!pooledEnemyChars[i].activeInHierarchy)
+            {
+                character = pooledEnemyChars[i];
+                break;
+            }
+        }
+        if (character == null)
+        {
+            PoolPlayersCharacters(charPoolExpansionAmount);
+            enemyCharPoolSize += charPoolExpansionAmount;
+            character = pooledEnemyChars[pooledEnemyChars.Count - 1];
+        }
+
+        character.GetComponent<EnemyCollision>().SetEnemyController(controller);
+        character.GetComponent<EnemyCollision>().isDying = false;
+        return character;
+    }
+
+    public void SetEnemyCharacter(GameObject character)
+    {
+        character.GetComponent<IndividualMovement>().canMoveIndividually = false;
+        character.GetComponent<EnemyCollision>().SetEnemyController(null);
         character.SetActive(false);
         character.transform.parent = null;
     }
