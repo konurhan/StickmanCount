@@ -70,14 +70,12 @@ public class PlayerMovementController : MonoBehaviour
         lastTouchPos = hit.point;
     }
 
-    public void OverrideMovement(Vector3 target)
+    public void OverrideMovement()
     {
         overrideMovementControl = true;
         foreach (GameObject character in PlayerManager.instance.characters)
         {
-            character.GetComponent<IndividualMovement>().SetupForMovement(target, 2f);
-            character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
+            character.GetComponent<IndividualMovement>().SetupForMovement();
         }
     }
 
@@ -87,16 +85,7 @@ public class PlayerMovementController : MonoBehaviour
         foreach (GameObject character in PlayerManager.instance.characters)
         {
             character.GetComponent<IndividualMovement>().StopIndividualMovement();
-            character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePosition;
         }
         PlayerManager.instance.RepositionCharacters();
-    }
-
-    public void MoveTowardsCommonMiddlePoint(Vector3 target)
-    {
-        Parent.transform.position = new Vector3(Mathf.Lerp(Parent.transform.position.x, target.x, Time.deltaTime * SpeedZ), 
-            Parent.transform.position.y,
-            Mathf.Lerp(Parent.transform.position.z, target.z, Time.deltaTime * SpeedZ));
     }
 }

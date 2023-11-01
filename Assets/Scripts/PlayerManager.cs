@@ -17,8 +17,14 @@ public class PlayerManager : MonoBehaviour
     [Range(0, 2)] [SerializeField] private float radiusCoefficient;
 
     [Range(0, 1)] [SerializeField] private float tweenDuration;
+    [SerializeField] private float repositionDelay = 1f;
 
     public Transform countText;
+
+    public bool isRePositioning;
+
+    public Coroutine delayedReposition;
+
     private void Awake()
     {
         instance = this;
@@ -34,25 +40,32 @@ public class PlayerManager : MonoBehaviour
     public void InitialCharacters()
     {
         characters.Clear();
-        /*int childCount = CharactersParent.childCount;
-        for (int i = 0; i < childCount; i++) 
-        { 
-            characters.Add(CharactersParent.GetChild(i).gameObject);
-        }*/
         AddNewCharacters(GameManager.Instance.gameProgress.startingUnitsCount);
     }
 
     //repositions characters so that they stay in a circle
     public void RepositionCharacters()
     {
+        if (delayedReposition != null)
+        {
+            StopCoroutine(delayedReposition);
+            delayedReposition = null;
+        }
+        StartCoroutine(RepositioningRoutine());
         int count = characters.Count;
         for(int i = 0; i < count; i++) 
         {
             float x = radiusCoefficient * Mathf.Sqrt(i) * Mathf.Cos(i * radius);
             float z = radiusCoefficient * Mathf.Sqrt(i) * Mathf.Sin(i * radius);
             Vector3 moveTo = new Vector3(x, 0, z);
-            characters[i].transform.DOLocalMove(moveTo, tweenDuration).SetEase(Ease.OutBack);
+            characters[i].transform.DOLocalMove(moveTo, tweenDuration);//.SetEase(Ease.OutBack);
         }
+    }
+
+    public IEnumerator RepositionDelayed()
+    {
+        yield return new WaitForSecondsRealtime(repositionDelay);
+        RepositionCharacters();
     }
 
     //used to request "count" number of characters from the pool
@@ -121,5 +134,12 @@ public class PlayerManager : MonoBehaviour
     public void AddBy(int num)
     {
         AddNewCharacters(num); 
+    }
+
+    private IEnumerator RepositioningRoutine()
+    {
+        isRePositioning = true;
+        yield return new WaitForSecondsRealtime(tweenDuration);
+        isRePositioning = false;
     }
 }

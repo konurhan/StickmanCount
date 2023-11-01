@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,7 +19,8 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
+            return;
         }
         else
         {
@@ -27,28 +29,40 @@ public class GameManager : MonoBehaviour
         }
 
         gameProgress = new GameProgress();
+        LoadGame();
+
+        //Debug.Log(SceneManager.GetActiveScene().path);
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            StartCoroutine(LoadNextLevel());
+        }
+        else
+        {
+            InGamePanel = CanvasManager.instance.InGamePanel;
+            EndofTheLevelPanel = CanvasManager.instance.EndOfLevelPanel;
+        }
     }
 
     private void Start()
     {
-        LoadGame();
-        LoadNextLevel();
     }
 
     public void OnLevelFinished()
     {
-        //calculate reward - and show it on screen
+        //calculate reward
         int coinReward = PlayerManager.instance.characters.Count * coinRewardMultiplier;
+        int coinStart = gameProgress.coinCount;
+        
         //update progress
         gameProgress.lastUnlockedLevel++;
         gameProgress.coinCount += coinReward;
 
         //save game
         SaveGame();
-        //pause time
 
         //open canvas and wait for user to push next level button
         EndofTheLevelPanel.gameObject.SetActive(true);
+        EndofTheLevelPanel.gameObject.GetComponent<EndOfLevelUI>().OnPassed(coinReward, coinStart);
         PlayerManager.instance.CharactersParent.gameObject.SetActive(false);
         PlayerManager.instance.gameObject.SetActive(false);
 
@@ -57,19 +71,43 @@ public class GameManager : MonoBehaviour
     public void OnLevelFailed()
     {
         EndofTheLevelPanel.gameObject.SetActive(true);
+        EndofTheLevelPanel.gameObject.GetComponent<EndOfLevelUI>().OnFailed();
         PlayerManager.instance.CharactersParent.gameObject.SetActive(false);
         PlayerManager.instance.gameObject.SetActive(false);
     }
 
+    public void LoadNextLevelButton()
+    {
+        StartCoroutine(LoadNextLevel());
+    }
+
     public IEnumerator LoadNextLevel()
     {
+        if (SceneUtility.GetBuildIndexByScenePath("Assets/Scenes/Level"+ gameProgress.lastUnlockedLevel.ToString()+".unity") == -1)//Assets/Scenes/Level1.unity
+        {
+            Debug.Log("Couldn' find scene: Assets/Scenes/Level1.unity// last unlocked level is: "+ gameProgress.lastUnlockedLevel);
+            gameProgress.lastUnlockedLevel--;
+            SaveGame();
+            Debug.Log("No more levels beyond level: " + gameProgress.lastUnlockedLevel);
+        }
         AsyncOperation sceneLoad = SceneManager.LoadSceneAsync("Level" + gameProgress.lastUnlockedLevel);
 
         while (!sceneLoad.isDone)
         {
-            yield return null;
+            Debug.Log("Scene ind is: " + SceneManager.GetActiveScene().buildIndex);
+            yield return new WaitForEndOfFrame();
         }
-        EndofTheLevelPanel.gameObject.SetActive(false);
+        //after this line we are in the new scene
+        Debug.Log("Scene ind is: " + SceneManager.GetActiveScene().buildIndex);
+        /*if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            EndofTheLevelPanel.GetChild(1).GetChild(0).gameObject.GetComponent<CharacterLevelEndAnimation>().StopDancing();
+            EndofTheLevelPanel.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("Scene ind is: "+SceneManager.GetActiveScene().buildIndex);
+        }*/
     }
 
     private void LoadGame()//call only when the game opens

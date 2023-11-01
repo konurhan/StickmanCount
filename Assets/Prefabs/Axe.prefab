@@ -245,6 +245,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 802983645802477392}
+  - component: {fileID: 8880787958117088034}
+  - component: {fileID: 4232077119585109940}
   m_Layer: 0
   m_Name: Axe
   m_TagString: Untagged
@@ -269,3 +271,36 @@ Transform:
   - {fileID: 7648123547358885584}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8880787958117088034
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4879886245063293239}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 3.9328237, z: 5.005017}
+  m_Center: {x: 0, y: 1.1140802, z: 2.0025089}
+--- !u!114 &4232077119585109940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4879886245063293239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51aaab32e801b6945b6c1d62c320152c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
