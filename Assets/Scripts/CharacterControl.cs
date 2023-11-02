@@ -26,7 +26,7 @@ public class CharacterControl : MonoBehaviour
         if (isDying) { return; }
         if (collision.gameObject.CompareTag("DeadlySurface")) 
         {
-            if (PlayerManager.instance.delayedReposition == null)
+            if (PlayerManager.instance.delayedReposition == null && !gameObject.GetComponent<IndividualMovement>().canMoveIndividually)
             {
                 PlayerManager.instance.delayedReposition = PlayerManager.instance.StartCoroutine(PlayerManager.instance.RepositionDelayed());
             }

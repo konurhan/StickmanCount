@@ -11,6 +11,7 @@ public class PlayerMovementController : MonoBehaviour
     public Vector3 lastTouchPos;
 
     public Camera mainCam;
+    public Camera canvasCam;
     public RaycastHit hit;
 
     public Transform Parent;
@@ -20,20 +21,32 @@ public class PlayerMovementController : MonoBehaviour
 
     bool overrideMovementControl;
 
+    bool isStarted;
+
+    LayerMask mask = 1 << 6;
+
     private void Awake()
     {
         instance = this;
         isHoldingDown = false;
         overrideMovementControl = false;
-    }
-
-    void Start()
-    {
+        isStarted = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!isStarted)
+        {
+            /*if (!Input.GetMouseButtonDown(0)) return;
+            Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out hit, 1000,mask);
+            if (hit != null)
+            {
+
+            }*/
+            return;
+        }
+
         if (!overrideMovementControl)
         {
             HoldingCheck();
@@ -87,5 +100,14 @@ public class PlayerMovementController : MonoBehaviour
             character.GetComponent<IndividualMovement>().StopIndividualMovement();
         }
         PlayerManager.instance.RepositionCharacters();
+    }
+
+    public void TouchToStart()
+    {
+        isStarted = true;
+        CanvasManager.instance.InGamePanel.GetChild(0).gameObject.SetActive(false);
+        CanvasManager.instance.StartingUnitsButton.gameObject.SetActive(false);
+        CanvasManager.instance.CoinMultiplierButton.gameObject.SetActive(false);
+        CanvasManager.instance.SettingsButton.gameObject.SetActive(false);
     }
 }

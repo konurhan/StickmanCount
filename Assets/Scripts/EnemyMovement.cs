@@ -36,6 +36,10 @@ public class EnemyMovement : MonoBehaviour
                 target = (playerParent.position - enemyParent.position)/2 + enemyParent.position;
                 OverrideMovement();
                 PlayerMovementController.instance.OverrideMovement();
+                if (PlayerManager.instance.delayedReposition != null)
+                {
+                    PlayerManager.instance.StopCoroutine(PlayerManager.instance.delayedReposition);
+                }
 
                 ChangeEnemyRotations(playerParent.position - enemyParent.position);
                 ChangePlayerRotations(enemyParent.position - playerParent.position);

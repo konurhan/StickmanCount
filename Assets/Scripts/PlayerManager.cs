@@ -101,12 +101,15 @@ public class PlayerManager : MonoBehaviour
         characters.Remove(character);
         ObjectPooling.instance.SetPlayerCharacter(character);
         UpdateCountText();
+
+        CheckForDefeat();
     }
 
     public IEnumerator DestroyCharacterDelayed(GameObject character)
     {
         yield return new WaitForSecondsRealtime(2);
         ObjectPooling.instance.SetPlayerCharacter(character);
+        CheckForDefeat();
     }
 
     public void UpdateCountText()
@@ -141,5 +144,13 @@ public class PlayerManager : MonoBehaviour
         isRePositioning = true;
         yield return new WaitForSecondsRealtime(tweenDuration);
         isRePositioning = false;
+    }
+
+    private void CheckForDefeat()
+    {
+        if (characters.Count == 0) 
+        {
+            GameManager.Instance.OnLevelFailed();
+        }
     }
 }

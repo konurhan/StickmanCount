@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
         gameProgress = new GameProgress();
         LoadGame();
 
-        //Debug.Log(SceneManager.GetActiveScene().path);
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             StartCoroutine(LoadNextLevel());
@@ -50,7 +49,7 @@ public class GameManager : MonoBehaviour
     public void OnLevelFinished()
     {
         //calculate reward
-        int coinReward = PlayerManager.instance.characters.Count * coinRewardMultiplier;
+        int coinReward = (PlayerManager.instance.characters.Count * gameProgress.coinRewardMultiplier);
         int coinStart = gameProgress.coinCount;
         
         //update progress
@@ -94,20 +93,8 @@ public class GameManager : MonoBehaviour
 
         while (!sceneLoad.isDone)
         {
-            Debug.Log("Scene ind is: " + SceneManager.GetActiveScene().buildIndex);
             yield return new WaitForEndOfFrame();
         }
-        //after this line we are in the new scene
-        Debug.Log("Scene ind is: " + SceneManager.GetActiveScene().buildIndex);
-        /*if (SceneManager.GetActiveScene().buildIndex > 0)
-        {
-            EndofTheLevelPanel.GetChild(1).GetChild(0).gameObject.GetComponent<CharacterLevelEndAnimation>().StopDancing();
-            EndofTheLevelPanel.gameObject.SetActive(false);
-        }
-        else
-        {
-            Debug.Log("Scene ind is: "+SceneManager.GetActiveScene().buildIndex);
-        }*/
     }
 
     private void LoadGame()//call only when the game opens

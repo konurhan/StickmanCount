@@ -54,13 +54,13 @@ public class EndOfLevelUI : MonoBehaviour
         NextLevelButton.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Next Level";
 
         TweenCoins();
-        StartCoroutine(IncreaseMoneyCount(moneyStart, Reward, MoneyCount.gameObject.GetComponent<TextMeshProUGUI>()));//simultaneously start increasing money count
+        StartCoroutine(IncreaseMoneyCount(moneyStart, Reward, MoneyCount.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>()));
     }
 
     private void TweenCoins()
     {
         ResetCoins();
-        Vector2 moneyIconPos = MoneyCount.GetChild(0).gameObject.GetComponent<RectTransform>().anchoredPosition;
+        Vector2 moneyIconPos = MoneyCount.GetChild(1).gameObject.GetComponent<RectTransform>().anchoredPosition;
         
         float delay = 0f;
         for (int i = 0; i < coins.Length; i++)
@@ -69,15 +69,15 @@ public class EndOfLevelUI : MonoBehaviour
 
             coin.DOScale(1f, 0.3f).SetDelay(delay).SetEase(Ease.OutBack);
 
-            coin.GetComponent<RectTransform>().DOAnchorPos(moneyIconPos, 0.8f).SetDelay(delay + 0.5f).SetEase(Ease.InBack);//1.3 sec
+            coin.GetComponent<RectTransform>().DOAnchorPos(moneyIconPos, 0.8f).SetDelay(delay + 0.5f).SetEase(Ease.InBack);
 
-            coin.DORotate(Vector3.zero, 0.8f).SetDelay(delay + 0.7f).SetEase(Ease.Flash);//1 sec
+            coin.DORotate(Vector3.zero, 0.8f).SetDelay(delay + 0.7f).SetEase(Ease.Flash);
 
-            coin.DOScale(0f, 0.3f).SetDelay(delay + 1.5f).SetEase(Ease.OutBack);//1.8sec
+            coin.DOScale(0f, 0.3f).SetDelay(delay + 1.5f).SetEase(Ease.OutBack);
 
-            delay += 0.1f;//next coin will start moving after 0.1 sec than current coin's strat
+            delay += 0.1f;
 
-            MoneyCount.GetChild(0).DOScale(1.2f, 0.1f).SetLoops(10, LoopType.Yoyo).SetEase(Ease.InOutSine).SetDelay(1.2f);//loop count should be an even number so that sclace comes back to normal
+            MoneyCount.GetChild(1).DOScale(1.2f, 0.1f).SetLoops(10, LoopType.Yoyo).SetEase(Ease.InOutSine).SetDelay(1.2f);
         }
     }
 
@@ -87,7 +87,6 @@ public class EndOfLevelUI : MonoBehaviour
         {
             coins[i].transform.rotation = coinQuaternions[i];
             coins[i].transform.position = coinPositions[i];
-            //coins[i].SetActive(true);
         }
     }
 
