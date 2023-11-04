@@ -1,6 +1,5 @@
 using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -69,7 +68,10 @@ public class EndOfLevelUI : MonoBehaviour
 
             coin.DOScale(1f, 0.3f).SetDelay(delay).SetEase(Ease.OutBack);
 
-            coin.GetComponent<RectTransform>().DOAnchorPos(moneyIconPos, 0.8f).SetDelay(delay + 0.5f).SetEase(Ease.InBack);
+            coin.GetComponent<RectTransform>().DOAnchorPos(moneyIconPos, 0.8f).SetDelay(delay + 0.5f).SetEase(Ease.InBack).OnComplete(() =>
+            {
+                SoundManager.instance.PlayCoinSound();
+            });
 
             coin.DORotate(Vector3.zero, 0.8f).SetDelay(delay + 0.7f).SetEase(Ease.Flash);
 

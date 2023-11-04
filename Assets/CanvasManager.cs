@@ -1,6 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,28 +37,45 @@ public class CanvasManager : MonoBehaviour
                                                                                        GameManager.Instance.gameProgress.coinCount.ToString();
         InGamePanel.GetChild(2).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text =
                                                                                        GameManager.Instance.gameProgress.coinCount.ToString();
+
+        if (GameManager.Instance.gameProgress.vibrationOn)
+        {
+            VibrationButton.image.color = VibrationColor;
+        }
+        else
+        {
+            VibrationButton.image.color = Color.white;
+        }
+
+        if (GameManager.Instance.gameProgress.soundOn)
+        {
+            AudioButton.image.color = AudioColor;
+        }
+        else
+        {
+            AudioButton.image.color = Color.white;
+        }
     }
 
     public void OnSettingsPressed()
     {
-        if (SettingsButton.GetChild(0).gameObject.activeInHierarchy)
+        if (!SettingsButton.GetChild(0).gameObject.activeInHierarchy)
         {
-            SettingsButton.GetChild(0).gameObject.SetActive(false);
-            SettingsButton.GetChild(1).DORotate(new Vector3(0,0,180), 0.1f);
+            SettingsButton.GetChild(0).gameObject.SetActive(true);
+            SettingsButton.GetChild(1).DORotate(new Vector3(0, 0, 180), 0.6f);
         }
         else
         {
-            SettingsButton.GetChild(0).gameObject.SetActive(true);
-            SettingsButton.GetChild(1).DORotate(new Vector3(0, 0, -180), 0.1f);
+            SettingsButton.GetChild(0).gameObject.SetActive(false);
+            SettingsButton.GetChild(1).DORotate(new Vector3(0, 0, -1), 0.6f);
         }
-        
-
     }
 
     public void OnAudioPressed()
     {
-
         //open close audio
+        GameManager.Instance.ToggleSound();
+
         //change color
         if (AudioButton.image.color == Color.white)
         {
@@ -75,6 +90,8 @@ public class CanvasManager : MonoBehaviour
     public void OnVibrationPressed()
     {
         //open close vibration
+        GameManager.Instance.ToggleVibration();
+
         //change color
         if (VibrationButton.image.color == Color.white)
         {
@@ -99,7 +116,7 @@ public class CanvasManager : MonoBehaviour
             GameManager.Instance.gameProgress.coinCount -= GameManager.Instance.gameProgress.unitPrice;
             GameManager.Instance.gameProgress.unitPrice *= 2;
             GameManager.Instance.gameProgress.startingUnitsCount += 1;
-            GameManager.Instance.SaveGame();
+            GameManager.Instance.SaveGame(GameManager.Instance.gameProgress);
         }
         else
         {
@@ -119,7 +136,7 @@ public class CanvasManager : MonoBehaviour
 
         //update gameprogress
         GameManager.Instance.gameProgress.startingUnitsCount++;
-        GameManager.Instance.SaveGame();
+        GameManager.Instance.SaveGame(GameManager.Instance.gameProgress);
     }
 
     public void BuyCoinRewardBoost()
@@ -129,7 +146,7 @@ public class CanvasManager : MonoBehaviour
             GameManager.Instance.gameProgress.coinCount -= GameManager.Instance.gameProgress.coinMultiplierPrice;
             GameManager.Instance.gameProgress.coinMultiplierPrice *= 2;
             GameManager.Instance.gameProgress.coinRewardMultiplier += 1;
-            GameManager.Instance.SaveGame();
+            GameManager.Instance.SaveGame(GameManager.Instance.gameProgress);
         }
         else
         {

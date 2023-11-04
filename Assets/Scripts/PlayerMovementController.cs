@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
@@ -38,12 +35,6 @@ public class PlayerMovementController : MonoBehaviour
     {
         if (!isStarted)
         {
-            /*if (!Input.GetMouseButtonDown(0)) return;
-            Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out hit, 1000,mask);
-            if (hit != null)
-            {
-
-            }*/
             return;
         }
 
@@ -90,6 +81,7 @@ public class PlayerMovementController : MonoBehaviour
         {
             character.GetComponent<IndividualMovement>().SetupForMovement();
         }
+        SoundManager.instance.StopWalkingClip();
     }
 
     public void ReturnToNormal()
@@ -100,6 +92,7 @@ public class PlayerMovementController : MonoBehaviour
             character.GetComponent<IndividualMovement>().StopIndividualMovement();
         }
         PlayerManager.instance.RepositionCharacters();
+        SoundManager.instance.PlayWalkingClip();
     }
 
     public void TouchToStart()
@@ -109,5 +102,6 @@ public class PlayerMovementController : MonoBehaviour
         CanvasManager.instance.StartingUnitsButton.gameObject.SetActive(false);
         CanvasManager.instance.CoinMultiplierButton.gameObject.SetActive(false);
         CanvasManager.instance.SettingsButton.gameObject.SetActive(false);
+        SoundManager.instance.PlayWalkingClip();
     }
 }

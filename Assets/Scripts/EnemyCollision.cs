@@ -12,36 +12,6 @@ public class EnemyCollision : MonoBehaviour
     {
         isDying = false;
     }
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-    }
-
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("DeadlySurface"))
-        {
-            CallPSOnCollision(collision);
-            controller.KillCharacter(gameObject);
-        }
-        else if (collision.gameObject.CompareTag("Player"))
-        {
-            CallPSOnCollision(collision);
-            controller.KillCharacter(gameObject);
-            PlayerManager.instance.KillCharacter(collision.gameObject);
-        }
-    }*/
-
-    /*private void CallPSOnCollision(Collision collision)
-    {
-        Vector3 position = transform.position + Vector3.up;
-        Vector3 normal = collision.GetContact(0).normal;
-        ParticleSystemManager.instance.EmitDropletBurst(position, normal, color);
-    }*/
 
     //call when character is added to an enemy group
     public void SetEnemyController(EnemyController controller)

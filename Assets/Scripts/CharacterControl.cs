@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterControl : MonoBehaviour
@@ -33,6 +31,7 @@ public class CharacterControl : MonoBehaviour
             isDying = true;
             CallPSOnCollision(collision, color);
             PlayerManager.instance.KillCharacter(gameObject);
+            SoundManager.instance.PlayPlayerPop();
         }
         else if (collision.gameObject.CompareTag("Enemy"))
         {
@@ -43,6 +42,7 @@ public class CharacterControl : MonoBehaviour
             CallPSOnCollision(collision, ParticleSystemManager.instance.Red);
             collision.gameObject.GetComponent<EnemyCollision>().controller.KillCharacter(collision.gameObject);
             PlayerManager.instance.KillCharacter(gameObject);
+            SoundManager.instance.PlayPlayerPop();
         }
     }
 

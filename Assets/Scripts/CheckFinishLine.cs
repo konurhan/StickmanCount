@@ -1,13 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CheckFinishLine : MonoBehaviour
 {
+    int count = 0;
+
     private void OnTriggerEnter(Collider other)
     {
-        StartCoroutine(InvokeMethodDelayed(1f));
+        if (count == 0)
+        {
+            StartCoroutine(InvokeMethodDelayed(1f));
+            count++;
+        }
+        
     }
 
     private IEnumerator InvokeMethodDelayed(float delay)

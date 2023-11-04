@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -29,6 +27,7 @@ public class GateController : MonoBehaviour
     {
         if (isConsumed) return;
         if (!other.gameObject.CompareTag("Player")) return;
+        SoundManager.instance.PlayGateClip();
         Text.gameObject.SetActive(false);
         Bubbles.SetActive(false);
         gameObject.GetComponent<MeshRenderer>().enabled = false;

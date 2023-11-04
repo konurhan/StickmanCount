@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,6 +13,9 @@ public class GameManager : MonoBehaviour
     public Transform InGamePanel;
     public Transform EndofTheLevelPanel;
 
+    public bool vibrationOn;
+    public bool soundOn;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -28,8 +29,10 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
-        gameProgress = new GameProgress();
-        LoadGame();
+        gameProgress = LoadGame();
+        
+        vibrationOn = gameProgress.vibrationOn;
+        soundOn = gameProgress.soundOn;
 
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
@@ -40,14 +43,34 @@ public class GameManager : MonoBehaviour
             InGamePanel = CanvasManager.instance.InGamePanel;
             EndofTheLevelPanel = CanvasManager.instance.EndOfLevelPanel;
         }
+#if UNITY_EDITOR
+        Debug.unityLogger.logEnabled = true;
+#else
+        Debug.unityLogger.logEnabled = false;
+#endif
     }
 
-    private void Start()
+    public void ToggleSound()
     {
+        soundOn = !soundOn;
+        gameProgress.soundOn = soundOn;
+        SaveGame(gameProgress);
+
+        AudioListener.pause = !soundOn;
+    }
+
+    public void ToggleVibration()
+    {
+        vibrationOn = !vibrationOn;
+        gameProgress.vibrationOn = vibrationOn;
+        SaveGame(gameProgress);
     }
 
     public void OnLevelFinished()
     {
+        //stop sound effect
+        SoundManager.instance.StopWalkingClip();
+
         //calculate reward
         int coinReward = (PlayerManager.instance.characters.Count * gameProgress.coinRewardMultiplier);
         int coinStart = gameProgress.coinCount;
@@ -57,14 +80,14 @@ public class GameManager : MonoBehaviour
         gameProgress.coinCount += coinReward;
 
         //save game
-        SaveGame();
+        SaveGame(gameProgress);
 
         //open canvas and wait for user to push next level button
         EndofTheLevelPanel.gameObject.SetActive(true);
         EndofTheLevelPanel.gameObject.GetComponent<EndOfLevelUI>().OnPassed(coinReward, coinStart);
         PlayerManager.instance.CharactersParent.gameObject.SetActive(false);
         PlayerManager.instance.gameObject.SetActive(false);
-
+        SoundManager.instance.PlayLevelPassedClip();
     }
 
     public void OnLevelFailed()
@@ -73,6 +96,7 @@ public class GameManager : MonoBehaviour
         EndofTheLevelPanel.gameObject.GetComponent<EndOfLevelUI>().OnFailed();
         PlayerManager.instance.CharactersParent.gameObject.SetActive(false);
         PlayerManager.instance.gameObject.SetActive(false);
+        SoundManager.instance.PlayLevelFailedClip();
     }
 
     public void LoadNextLevelButton()
@@ -82,11 +106,11 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator LoadNextLevel()
     {
-        if (SceneUtility.GetBuildIndexByScenePath("Assets/Scenes/Level"+ gameProgress.lastUnlockedLevel.ToString()+".unity") == -1)//Assets/Scenes/Level1.unity
+        while (SceneUtility.GetBuildIndexByScenePath("Assets/Scenes/Level"+ gameProgress.lastUnlockedLevel.ToString()+".unity") == -1)//Assets/Scenes/Level1.unity
         {
             Debug.Log("Couldn' find scene: Assets/Scenes/Level1.unity// last unlocked level is: "+ gameProgress.lastUnlockedLevel);
             gameProgress.lastUnlockedLevel--;
-            SaveGame();
+            SaveGame(gameProgress);
             Debug.Log("No more levels beyond level: " + gameProgress.lastUnlockedLevel);
         }
         AsyncOperation sceneLoad = SceneManager.LoadSceneAsync("Level" + gameProgress.lastUnlockedLevel);
@@ -97,26 +121,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void LoadGame()//call only when the game opens
+    private GameProgress LoadGame()//call only when the game opens
     {
         GameProgress progress = SaveSystem.LoadData<GameProgress>("/GameProgress.json");
+        GameProgress returned;
         if (progress != null)
         {
-            gameProgress = progress;
+            returned = progress;
         }
         else
         {
-            gameProgress = new GameProgress();
+            returned = new GameProgress();
         }
+        return returned;
     }
 
-    public void SaveGame()//call when a level is finished, player bought something
+    public void SaveGame(GameProgress toBeSaved)//call when a level is finished, player bought something
     {
-        if (gameProgress == null)
+        if (toBeSaved == null)
         {
-            gameProgress = new GameProgress();
+            toBeSaved = new GameProgress();
         }
-        SaveSystem.SaveData("/GameProgress.json", gameProgress);
+        SaveSystem.SaveData("/GameProgress.json", toBeSaved);
     }
 
     public void UpdateGameProgress(GameProgress progress)//call from other scripts

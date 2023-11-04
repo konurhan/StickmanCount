@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 //Manages characters belonging to the player
 public class PlayerManager : MonoBehaviour
@@ -101,7 +100,7 @@ public class PlayerManager : MonoBehaviour
         characters.Remove(character);
         ObjectPooling.instance.SetPlayerCharacter(character);
         UpdateCountText();
-
+        Vibrate();
         CheckForDefeat();
     }
 
@@ -152,5 +151,11 @@ public class PlayerManager : MonoBehaviour
         {
             GameManager.Instance.OnLevelFailed();
         }
+    }
+
+    private void Vibrate()
+    {
+        if (!GameManager.Instance.vibrationOn) return;
+        Handheld.Vibrate();
     }
 }
