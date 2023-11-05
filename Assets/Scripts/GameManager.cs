@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
+            Debug.Log("build index is 0, starting to load next level");
             StartCoroutine(LoadNextLevel());
         }
         else
@@ -114,6 +115,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("No more levels beyond level: " + gameProgress.lastUnlockedLevel);
         }
         AsyncOperation sceneLoad = SceneManager.LoadSceneAsync("Level" + gameProgress.lastUnlockedLevel);
+        Debug.Log("async level load is called");
 
         while (!sceneLoad.isDone)
         {

@@ -14,12 +14,12 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Environment
+  - Player
+  - Enemy
+  - DecalParticle
+  - UIparticle
+  - UIcollider
   - 
   - 
   - 
@@ -41,6 +41,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: bubble
+    uniqueID: 3173428993
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
