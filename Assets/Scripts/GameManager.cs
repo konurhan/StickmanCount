@@ -34,6 +34,16 @@ public class GameManager : MonoBehaviour
         vibrationOn = gameProgress.vibrationOn;
         soundOn = gameProgress.soundOn;
 
+        
+#if UNITY_EDITOR
+        Debug.unityLogger.logEnabled = true;
+#else
+        Debug.unityLogger.logEnabled = false;
+#endif
+    }
+
+    private void Start()
+    {
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             Debug.Log("build index is 0, starting to load next level");
@@ -44,11 +54,6 @@ public class GameManager : MonoBehaviour
             InGamePanel = CanvasManager.instance.InGamePanel;
             EndofTheLevelPanel = CanvasManager.instance.EndOfLevelPanel;
         }
-#if UNITY_EDITOR
-        Debug.unityLogger.logEnabled = true;
-#else
-        Debug.unityLogger.logEnabled = false;
-#endif
     }
 
     public void ToggleSound()
@@ -93,6 +98,7 @@ public class GameManager : MonoBehaviour
 
     public void OnLevelFailed()
     {
+        SoundManager.instance.StopWalkingClip();
         EndofTheLevelPanel.gameObject.SetActive(true);
         EndofTheLevelPanel.gameObject.GetComponent<EndOfLevelUI>().OnFailed();
         PlayerManager.instance.CharactersParent.gameObject.SetActive(false);
@@ -121,6 +127,12 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
+
+        /*if (SceneUtility.GetBuildIndexByScenePath("Assets/Scenes/Level" + gameProgress.lastUnlockedLevel.ToString() + ".unity") > 0)
+        {
+            InGamePanel = CanvasManager.instance.InGamePanel;
+            EndofTheLevelPanel = CanvasManager.instance.EndOfLevelPanel;
+        }*/
     }
 
     private GameProgress LoadGame()//call only when the game opens

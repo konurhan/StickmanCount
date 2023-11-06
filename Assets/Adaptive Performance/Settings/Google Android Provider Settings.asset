@@ -168,13 +168,13 @@ MonoBehaviour:
   m_scalerProfileList:
   - m_AdaptiveFramerate:
       m_Name: Adaptive Framerate
-      m_Enabled: 0
+      m_Enabled: 1
       m_Scale: 1
       m_VisualImpact: 2
       m_Target: 7
-      m_MaxLevel: 45
-      m_MinBound: 15
-      m_MaxBound: 60
+      m_MaxLevel: 30
+      m_MinBound: 20
+      m_MaxBound: 50
     m_AdaptiveResolution:
       m_Name: Adaptive Resolution
       m_Enabled: 0
@@ -186,7 +186,7 @@ MonoBehaviour:
       m_MaxBound: 1
     m_AdaptiveBatching:
       m_Name: Adaptive Batching
-      m_Enabled: 0
+      m_Enabled: 1
       m_Scale: 1
       m_VisualImpact: 1
       m_Target: 1
@@ -195,7 +195,7 @@ MonoBehaviour:
       m_MaxBound: 1
     m_AdaptiveLOD:
       m_Name: Adaptive LOD
-      m_Enabled: 0
+      m_Enabled: 1
       m_Scale: 1
       m_VisualImpact: 2
       m_Target: 2
@@ -233,7 +233,7 @@ MonoBehaviour:
       m_Name: Adaptive Shadow Distance
       m_Enabled: 0
       m_Scale: 1
-      m_VisualImpact: 0
+      m_VisualImpact: 1
       m_Target: 2
       m_MaxLevel: 3
       m_MinBound: 0.15
@@ -249,7 +249,7 @@ MonoBehaviour:
       m_MaxBound: 1
     m_AdaptiveShadowQuality:
       m_Name: Adaptive Shadow Quality
-      m_Enabled: 0
+      m_Enabled: 1
       m_Scale: 1
       m_VisualImpact: 2
       m_Target: 3

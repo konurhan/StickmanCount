@@ -58,6 +58,7 @@ public class ObjectPooling : MonoBehaviour
             character = pooledPlayerChars[pooledPlayerChars.Count - 1];
         }
 
+
         Rigidbody rb = character.GetComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.drag = 1000;
@@ -65,6 +66,7 @@ public class ObjectPooling : MonoBehaviour
         rb.constraints = RigidbodyConstraints.None;
         rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePosition;
         character.GetComponent<CharacterControl>().isDying = false;
+        character.GetComponent<CharacterControl>().isFalling = false;
 
         character.transform.position = Vector3.zero;
         character.transform.rotation = Quaternion.identity;
@@ -73,10 +75,6 @@ public class ObjectPooling : MonoBehaviour
 
     public void SetPlayerCharacter(GameObject character)
     {
-        /*character.GetComponent<Rigidbody>().drag = 1000;
-        character.GetComponent<Rigidbody>().angularDrag = 10;
-        character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-        character.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;*/
         character.GetComponent<IndividualMovement>().canMoveIndividually = false;
         character.SetActive(false);
         character.transform.parent = null;

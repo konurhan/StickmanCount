@@ -21,13 +21,14 @@ public class PlayerManager : MonoBehaviour
     public Transform countText;
 
     public bool isRePositioning;
+    private bool isFailedSoundPlayed;
 
     public Coroutine delayedReposition;
 
     private void Awake()
     {
         instance = this;
-
+        isFailedSoundPlayed = false;
 
     }
 
@@ -85,13 +86,15 @@ public class PlayerManager : MonoBehaviour
 
     public void RemoveCharacters(int count)
     {
+        if (count > characters.Count) count = characters.Count;
         for (int i = 0; i < count; i++)
         {
-            ObjectPooling.instance.SetPlayerCharacter(characters[i]);
-            characters.RemoveAt(i);
+            ObjectPooling.instance.SetPlayerCharacter(characters[0]);
+            characters.RemoveAt(0);
         }
         UpdateCountText();
         RepositionCharacters();
+        CheckForDefeat();
     }
 
     //called when character collides with it's enemy or with a deadly surface
@@ -147,9 +150,10 @@ public class PlayerManager : MonoBehaviour
 
     private void CheckForDefeat()
     {
-        if (characters.Count == 0) 
+        if (characters.Count == 0 && !isFailedSoundPlayed) 
         {
             GameManager.Instance.OnLevelFailed();
+            isFailedSoundPlayed = true;
         }
     }
 

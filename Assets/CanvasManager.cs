@@ -30,8 +30,8 @@ public class CanvasManager : MonoBehaviour
         GameManager.Instance.EndofTheLevelPanel = EndOfLevelPanel;
         GameManager.Instance.InGamePanel = InGamePanel;
 
-        StartingUnitsButton.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = GameManager.Instance.gameProgress.startingUnitsCount.ToString();
-        CoinMultiplierButton.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = GameManager.Instance.gameProgress.coinRewardMultiplier.ToString();
+        StartingUnitsButton.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = "x " + GameManager.Instance.gameProgress.startingUnitsCount.ToString();
+        CoinMultiplierButton.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = "x " + GameManager.Instance.gameProgress.coinRewardMultiplier.ToString();
 
         EndOfLevelPanel.gameObject.GetComponent<EndOfLevelUI>().MoneyCount.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text =
                                                                                        GameManager.Instance.gameProgress.coinCount.ToString();
@@ -153,9 +153,9 @@ public class CanvasManager : MonoBehaviour
             return;
         }
 
-        string newCount = GameManager.Instance.gameProgress.coinCount.ToString();
-        TweenCount(EndOfLevelPanel.gameObject.GetComponent<EndOfLevelUI>().MoneyCount, newCount);
-        TweenCount(InGamePanel.GetChild(2), newCount);
+        string newCoinCount = GameManager.Instance.gameProgress.coinCount.ToString();
+        TweenCount(EndOfLevelPanel.gameObject.GetComponent<EndOfLevelUI>().MoneyCount, newCoinCount);
+        TweenCount(InGamePanel.GetChild(2), newCoinCount);
         TweenButtonOnPressed(CoinMultiplierButton, GameManager.Instance.gameProgress.coinRewardMultiplier);
     }
 
@@ -164,13 +164,13 @@ public class CanvasManager : MonoBehaviour
         RectTransform numberText = button.GetChild(1).gameObject.GetComponent<RectTransform>();
         RectTransform buttonRect = button.gameObject.GetComponent<RectTransform>();
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(numberText.DOScale(0, 0.1f));
-        sequence.Append(buttonRect.DOScale(buttonRect.localScale / 1.1f, 0.1f).SetLoops(10, LoopType.Yoyo));
-        sequence.Append(buttonRect.DOShakeAnchorPos(0.8f, 40, 15, 30)).OnComplete(() =>
+        sequence.Append(numberText.DOScale(0, 0.1f).OnComplete(() =>
         {
             button.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text =
                     "x " + newAmount.ToString();
-        });
+        }));
+        sequence.Append(buttonRect.DOScale(buttonRect.localScale / 1.1f, 0.1f).SetLoops(10, LoopType.Yoyo));
+        sequence.Append(buttonRect.DOShakeAnchorPos(0.8f, 40, 15, 30));
         sequence.Append(numberText.DOScale(new Vector3(0.4f,0.1f,1),0.4f).SetEase(Ease.OutBounce));
     }
 

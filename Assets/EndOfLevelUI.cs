@@ -97,7 +97,7 @@ public class EndOfLevelUI : MonoBehaviour
         moneyText.text = initial.ToString();
         yield return waitCoinArrival;
 
-        WaitForSecondsRealtime waitObj = new WaitForSecondsRealtime(1.2f / toBeAdded);
+        WaitForSeconds waitObj = new WaitForSeconds(1.2f / toBeAdded);
         int count = 0;
         while (count < toBeAdded)
         {

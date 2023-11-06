@@ -51,7 +51,7 @@ public class GameProgress
     public bool soundOn;
     public GameProgress()
     {
-        lastUnlockedLevel = 0; coinCount = 0; startingUnitsCount = 1; coinRewardMultiplier = 2; unitPrice = 200; coinMultiplierPrice = 400;
+        lastUnlockedLevel = 1; coinCount = 0; startingUnitsCount = 1; coinRewardMultiplier = 2; unitPrice = 200; coinMultiplierPrice = 400;
         vibrationOn = true; soundOn = true;
     }
 }

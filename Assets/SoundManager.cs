@@ -45,7 +45,7 @@ public class SoundManager : MonoBehaviour
         WalkingSource1 = PlayerMovementController.instance.Parent.GetChild(3).gameObject.GetComponent<AudioSource>();
         WalkingSource2 = PlayerMovementController.instance.Parent.GetChild(4).gameObject.GetComponent<AudioSource>();
         PopingSource = PlayerMovementController.instance.Parent.GetChild(1).gameObject.GetComponent<AudioSource>();
-        CoinSource = GameManager.Instance.EndofTheLevelPanel.gameObject.GetComponent<EndOfLevelUI>().MoneyCount.gameObject.GetComponent<AudioSource>();
+        CoinSource = CanvasManager.instance.EndOfLevelPanel.gameObject.GetComponent<EndOfLevelUI>().MoneyCount.gameObject.GetComponent<AudioSource>();
 
         AudioListener.pause = !GameManager.Instance.gameProgress.soundOn;
         WalkingSource.clip = walking; WalkingSource1.clip = walking1; WalkingSource2.clip = walking2;

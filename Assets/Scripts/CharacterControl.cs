@@ -4,10 +4,12 @@ public class CharacterControl : MonoBehaviour
 {
     public Color color;
     public bool isDying;
+    public bool isFalling;
 
     private void Awake()
     {
         isDying = false;
+        isFalling = false;
     }
     void Start()
     {
@@ -48,17 +50,15 @@ public class CharacterControl : MonoBehaviour
 
     public void CheckIfShouldFall()
     {
+        if (isFalling) return;
         if (PlayerManager.instance.isRePositioning) return;
         if(!Physics.Raycast(new Vector3(transform.position.x, 5.1f, transform.position.z), Vector3.down, 15))
         {
-            //isFalling = true;
+            isFalling = true;
             GetComponent<Rigidbody>().isKinematic = false;
             GetComponent<Rigidbody>().drag = 0;
             GetComponent<Rigidbody>().angularDrag = 0.05f;
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY /*|
-                //RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionX*/;
-
             //following part can be realized inside a method name KillFallenCharacter in PlayerManager script as a coroutine
             PlayerManager.instance.characters.Remove(gameObject);
             PlayerManager.instance.UpdateCountText();

@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 5023003659737941307}
   m_Layer: 0
   m_Name: obs30
-  m_TagString: Untagged
+  m_TagString: DeadlySurface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -238,9 +238,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4265246346172041742}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 28.3, y: 6.16, z: 0.21}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 926170341446746736}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 3870670922514488510}
   m_Layer: 0
   m_Name: obs30 (1)
-  m_TagString: Untagged
+  m_TagString: DeadlySurface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
